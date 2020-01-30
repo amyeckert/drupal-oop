@@ -106,9 +106,66 @@ Dependency Injection
         $this->e = $e;
     } 
 
+D8 module structure
+    -yml pay attention to whitespace!
+    - add to or extend something that doesn't exist. 
+    /modules/custom/hello/hello.info.yml
+    example creates a page where we can work on test suites
+    basic pattern:
+    1. build a tool
+    2. tell drupal about tool
+
+    Controller handles request, returns result to browser
+        -notice that if you're in /src/Controller is a namespace
+    modules/custom/hello/src/Controller/HelloController.php
+    make tool #1. 
+    in HelloController.php
+    namespace Drupal\hello\Controller;
+
+    use Drupal\Core\Controller\ControllerBse;
+
+    class HelloController extends ControllerBase {
+        public function sayHi() {
+            // returns render array
+            return array(
+                '#markup' => "Hello Drupal 8!",
+            );
+        }
+    }
+
+    #2.
+    in modules/custom/hello/hello.router.yml:
+
+    hello.sayHi:
+    path: '/hello'
+    defaults: 
+        _controller: '\Drupal\hello\Controller\HelloController::sayHi'   
+    requirements:
+        _role: 'admin'
+        _permission: 'access content'
 
 
 
+Hook system is event listener system, observer pattern 
+\Drupal global object 
+
+Services
+    a stateless object that can be written in a Class, performs a testable task.
+    smallest piece of functionality
+    Drupal has a service container is a PHP object that manages the instantiation of services. 
+    in /src dir
+    namespace Drupal\hello;
+
+    class HelloService {
+        public function doSomeWork() {
+            //does some stuff here
+            drupal_set_message ("Hello Service!");
+        }
+    }
+    register new service with Ddrupal in HelloService.yml
+    services: 
+    hello.hello_service:
+        class: Drupal\hello\HelloService
 
 
-
+    https://www.drupal.org/docs/8/creating-custom-modules/a-practical-guide-to-building-basic-drupal-8-modules
