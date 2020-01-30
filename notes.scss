@@ -1,0 +1,114 @@
+/* stackstarter.io/spin
+pw PHPOO
+link to slides https://nickgs.com/php-oo-slides/#/
+
+"personal home page"
+
+1. Abstraction- desscribing ideas susinctly turn left vs describe the drive train engine in a car. google search  
+2. Encapsulation- keep details hidden, need to know basis, public/private
+3. Inheritance- branch off a parent definition or class.
+4. Polymorphism- an interface, describe a general type of object, which can then create variations.
+
+php-fig.org
+
+Classes- a plan, the blueprint, allows for mass production
+    Classes are objects
+    class names are camel-cased "BigHouse"
+    props and methods are lower camel-cased bigHouse
+    variables -- look at PSR
+    1 class per file
+    don't include closing php tag- header errors! White space on new line is interpreted as content and sent causing errors.
+    file name should match class name
+
+Object- an instance, the constructed house itself
+    $myHouse = new House ()
+    data = properties- holds data- can manage it's own state
+    behaviour
+
+use -> to access methods and properties in an object.
+    return $this->$num_rooms;
+
+Autoloading
+    Namespaces 
+    - directed graph allows you to pick and choose what to use when.
+    - organization
+    - avoid collisions & code confusion
+    - can contain many classes in a namespace
+    O3_views vs drupal_views...
+
+    Composer- 
+    - dependency manager for php
+    - packagist.org public repo for php packages
+    - autoloading is built in, 
+        -generates a php file that can search and find their way to the file. 
+        - allows devs to use USE keyword with namespaces
+        require_once(__DIR__ . "/src/Car.php); need to know exact location of file
+        vs
+        require_once(__DIR__ . "/autoloader.php); one and done
+        use\Vehicles\Car  // use the Car class in the Vehicles namespace
+        use\o3\views vs. use\drupal\views
+        - Can have a directory in which namespaced classes live,but a namespace doesn't get it's own .php file. 
+
+        $ composer init
+        $ composer require <name> // add packages
+        $ composer install // fetches and installs in /vendor, also generates the autoloader.php
+
+        Drupal is a dependency of composer project, Like module development. 
+
+        Use PSR4 auto loader tells composer that file struction follows that standard.
+        
+        In composer.json, add this block to create a map to this: 
+        "autoload": {
+            "psr-4": {
+                "Vehicles\\": "src/Vehicles",
+                "Other\\" => array($baseDir . '/src/Other')
+            }
+        },
+        will update the autoload_psr4.php to include these ^^.
+        Will NOT create the directory structure tho.
+
+Reusing Code:: Inheritance
+    - extends a parent class
+    - inherits Public and Protected methods and props.
+    - single inheritance - only one base class can be extended
+    Directed Graph shape of tree 
+
+Testing
+    -unit testing -individual modules, low level
+    test suites need to be maintained and upgraded
+    php-unit
+    $ composer require --dev phpunit/phpunit ^6
+    PHPUnit needs to be told what the autoloader is:
+    src file                use this autoloader:            run this test:
+    $ ./vendor/bin/phpunit --bootstrap ./vendor/autoload.php tests/CarTest
+
+Polymorphism 
+    Similar properties between pieces of things. 
+    ex. Every shape has an area, for ex. Each area is calculated differently, but they share property.
+    Interfaces-D8
+        - contract or a set of requirements that must be implemented.
+
+    function getVehicleMake(CarInterface $anyCar){
+        return $anyCar->getMake();
+    }
+
+    Classes can implement multiple interfaces. 
+
+Dependency Injection
+    
+    // this car can be constructed with only a specific Engine class.
+    public function __construct(Engine $e) {
+        $this->e = $e;
+    }
+
+    // car can be built with any engine since EngineInterface requires an engine of some kind... injected dependency as an function argument-
+    public function __construct(EngineInterface $e) {
+        $this->e = $e;
+    } 
+
+
+
+
+
+
+
